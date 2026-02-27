@@ -1,0 +1,17 @@
+name: scanwise
+version: 1.0.0+1
+description: DocForge-inspired PDF toolbox UI built with Flutter.
+publish_to: none
+
+environment:
+  sdk: ">=3.2.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  file_picker: ^8.1.2
+  flutter_riverpod: ^2.5.1
+  go_router: ^14.2.0
+
+flutter:
+  uses-material-design: true
