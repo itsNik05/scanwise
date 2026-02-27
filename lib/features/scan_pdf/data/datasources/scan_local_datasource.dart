@@ -1,25 +1,27 @@
 /// ------------------------------------------------------------
 /// ScanLocalDatasource
 /// ------------------------------------------------------------
-/// Handles actual scanning and saving logic.
-/// Later this will integrate:
-/// - Camera
-/// - ML Kit
-/// - PDF generation
+/// Handles scanning + saving using StorageService.
 /// ------------------------------------------------------------
 
-import 'dart:io';
+import 'package:scanwise/core/services/storage_service.dart';
 
 class ScanLocalDatasource {
+  final StorageService storageService;
+
+  ScanLocalDatasource(this.storageService);
+
   Future<String> scanDocument() async {
-    // TODO: integrate camera + PDF generation
-    // Simulating a scanned file path
-    await Future.delayed(const Duration(seconds: 1));
-    return "scanned_document_${DateTime.now().millisecondsSinceEpoch}.pdf";
+    final fileName =
+        "scanned_${DateTime.now().millisecondsSinceEpoch}.pdf";
+
+    final filePath =
+    await storageService.createEmptyPdf(fileName);
+
+    return filePath;
   }
 
   Future<void> saveDocument(String filePath) async {
-    // TODO: integrate real file storage
-    await Future.delayed(const Duration(milliseconds: 500));
+    // Already saved during scan
   }
 }
