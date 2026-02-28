@@ -29,7 +29,7 @@ class DashboardPage extends StatelessWidget {
             const SizedBox(height: 30),
 
             ElevatedButton(
-              onPressed: () => context.go(RouteNames.scan),
+              onPressed: () => context.push(RouteNames.scanCamera),
               child: const Text("Scan Document"),
             ),
 

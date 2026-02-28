@@ -10,4 +10,6 @@ class RouteNames {
   static const files = '/files';
   static const pdfPreview = '/pdf-preview';
   static const folders = '/folders';
+  static const scanCamera = '/scan-camera';
+  static const scanPreview = '/scan-preview';
 }

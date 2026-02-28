@@ -7,10 +7,12 @@
 import 'package:go_router/go_router.dart';
 import '../../features/dashboard/presentation/pages/dashboard_page.dart';
 import 'route_names.dart';
-import '../../features/scan_pdf/presentation/pages/scan_page.dart';
+
 import '../../features/files/presentation/pages/files_page.dart';
 import '../../features/files/presentation/pages/pdf_preview_page.dart';
 import '../../features/folders/presentation/pages/folders_page.dart';
+import '../../features/scan_pdf/presentation/pages/camera_page.dart';
+import '../../features/scan_pdf/presentation/pages/scan_preview_page.dart';
 
 final GoRouter appRouter = GoRouter(
   routes: [
@@ -18,10 +20,7 @@ final GoRouter appRouter = GoRouter(
       path: RouteNames.dashboard,
       builder: (context, state) => const DashboardPage(),
     ),
-    GoRoute(
-      path: RouteNames.scan,
-      builder: (context, state) => const ScanPage(),
-    ),
+
     GoRoute(
       path: RouteNames.files,
       builder: (context, state) {
@@ -45,8 +44,19 @@ final GoRouter appRouter = GoRouter(
     ),
 
     GoRoute(
+      path: RouteNames.scanCamera,
+      builder: (context, state) => const CameraPage(),
+    ),
+
+    GoRoute(
       path: RouteNames.folders,
       builder: (context, state) => const FoldersPage(),
+    ),
+
+    GoRoute(
+      path: RouteNames.scanPreview,
+      builder: (context, state) =>
+      const ScanPreviewPage(),
     ),
 
   ],
