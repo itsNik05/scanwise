@@ -13,6 +13,7 @@ import '../../features/files/presentation/pages/pdf_preview_page.dart';
 import '../../features/folders/presentation/pages/folders_page.dart';
 import '../../features/scan_pdf/presentation/pages/camera_page.dart';
 import '../../features/scan_pdf/presentation/pages/scan_preview_page.dart';
+import '../../features/scan_pdf/presentation/pages/scan_save_page.dart';
 
 final GoRouter appRouter = GoRouter(
   routes: [
@@ -38,8 +39,12 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: RouteNames.pdfPreview,
       builder: (context, state) {
-        final filePath = state.extra as String;
-        return PdfPreviewPage(filePath: filePath);
+        final data = state.extra as Map<String, String>;
+
+        return PdfPreviewPage(
+          path: data['path']!,
+          name: data['name']!,
+        );
       },
     ),
 
@@ -57,6 +62,11 @@ final GoRouter appRouter = GoRouter(
       path: RouteNames.scanPreview,
       builder: (context, state) =>
       const ScanPreviewPage(),
+    ),
+
+    GoRoute(
+      path: RouteNames.scanSave,
+      builder: (context, state) => const ScanSavePage(),
     ),
 
   ],

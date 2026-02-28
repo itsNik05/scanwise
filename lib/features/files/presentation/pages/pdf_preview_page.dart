@@ -1,13 +1,14 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:pdfx/pdfx.dart';
 
 class PdfPreviewPage extends StatefulWidget {
-  final String filePath;
+  final String path;
+  final String name;
 
   const PdfPreviewPage({
     super.key,
-    required this.filePath,
+    required this.path,
+    required this.name,
   });
 
   @override
@@ -15,32 +16,30 @@ class PdfPreviewPage extends StatefulWidget {
 }
 
 class _PdfPreviewPageState extends State<PdfPreviewPage> {
-  late PdfControllerPinch _controller;
+  late PdfController _pdfController;
 
   @override
   void initState() {
     super.initState();
-    _controller = PdfControllerPinch(
-      document: PdfDocument.openFile(widget.filePath),
+    _pdfController = PdfController(
+      document: PdfDocument.openFile(widget.path),
     );
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    _pdfController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final fileName = widget.filePath.split('/').last;
-
     return Scaffold(
       appBar: AppBar(
-        title: Text(fileName),
+        title: Text(widget.name),
       ),
-      body: PdfViewPinch(
-        controller: _controller,
+      body: PdfView(
+        controller: _pdfController,
       ),
     );
   }

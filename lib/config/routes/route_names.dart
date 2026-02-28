@@ -12,4 +12,5 @@ class RouteNames {
   static const folders = '/folders';
   static const scanCamera = '/scan-camera';
   static const scanPreview = '/scan-preview';
+  static const scanSave = '/scan-save';
 }
