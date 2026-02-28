@@ -3,25 +3,55 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../providers/file_provider.dart';
 import '../widgets/file_tile.dart';
-
+import '../../../../config/di/folders_di.dart';
 import '../../../../config/routes/route_names.dart';
 import 'package:go_router/go_router.dart';
 import '../providers/file_sort_type.dart';
 import 'package:share_plus/share_plus.dart';
 
 class FilesPage extends ConsumerWidget {
-  const FilesPage({super.key});
+  final String? folderPath;
+  final String? folderName;
+
+  const FilesPage({
+    super.key,
+    this.folderPath,
+    this.folderName,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final fileState = ref.watch(fileProvider);
-    final notifier = ref.read(fileProvider.notifier);
+    final fileState = ref.watch(fileProvider(folderPath));
+    final notifier = ref.read(fileProvider(folderPath).notifier);
 
     return Scaffold(
       appBar: AppBar(
         title: notifier.isSelectionMode
             ? Text('${notifier.selectedPaths.length} selected')
-            : const Text('Scanned Files'),
+            : folderPath == null
+            ? const Text('Scanned Files')
+            : Row(
+          children: [
+            GestureDetector(
+              onTap: () {
+                context.go(RouteNames.files);
+              },
+              child: const Text(
+                'Root',
+                style: TextStyle(
+                  decoration: TextDecoration.underline,
+                ),
+              ),
+            ),
+            const Text(' > '),
+            Expanded(
+              child: Text(
+                folderName ?? '',
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ],
+        ),
         leading: notifier.isSelectionMode
             ? IconButton(
           icon: const Icon(Icons.close),
@@ -40,6 +70,13 @@ class FilesPage extends ConsumerWidget {
               notifier.clearSelection();
             },
           ),
+          IconButton(
+            icon: const Icon(Icons.drive_file_move),
+            onPressed: () async {
+              _showMoveDialog(context, ref, notifier);
+            },
+          ),
+
           IconButton(
             icon: const Icon(Icons.delete),
             onPressed: () async {
@@ -104,7 +141,7 @@ class FilesPage extends ConsumerWidget {
                     border: OutlineInputBorder(),
                   ),
                   onChanged: (value) {
-                    ref.read(fileProvider.notifier).updateSearch(value);
+                    ref.read(fileProvider(folderPath).notifier).updateSearch(value);
                   },
                 ),
               ),
@@ -137,7 +174,7 @@ class FilesPage extends ConsumerWidget {
                   ],
                   onChanged: (value) {
                     if (value != null) {
-                      ref.read(fileProvider.notifier).updateSort(value);
+                      ref.read(fileProvider(folderPath).notifier).updateSort(value);
                     }
                   },
                 ),
@@ -148,7 +185,7 @@ class FilesPage extends ConsumerWidget {
               Expanded(
                 child: RefreshIndicator(
                   onRefresh: () =>
-                      ref.read(fileProvider.notifier).loadFiles(),
+                      ref.read(fileProvider(folderPath).notifier).loadFiles(),
                   child: ListView.builder(
                     padding: const EdgeInsets.all(16),
                     itemCount: files.length,
@@ -226,6 +263,41 @@ class FilesPage extends ConsumerWidget {
             ],
           );
         },
+      ),
+    );
+  }
+  void _showMoveDialog(
+      BuildContext context,
+      WidgetRef ref,
+      FileNotifier notifier,
+      ) async {
+    final folders =
+    await ref.read(getFoldersUseCaseProvider).call();
+
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text("Move To Folder"),
+        content: SizedBox(
+          width: double.maxFinite,
+          child: ListView.builder(
+            shrinkWrap: true,
+            itemCount: folders.length,
+            itemBuilder: (_, index) {
+              final folder = folders[index];
+
+              return ListTile(
+                leading: const Icon(Icons.folder),
+                title: Text(folder.name),
+                onTap: () async {
+                  Navigator.pop(context);
+                  await notifier
+                      .moveSelected(folder.path);
+                },
+              );
+            },
+          ),
+        ),
       ),
     );
   }

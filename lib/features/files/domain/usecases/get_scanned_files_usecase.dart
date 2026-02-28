@@ -6,7 +6,7 @@ class GetScannedFilesUseCase {
 
   GetScannedFilesUseCase(this.repository);
 
-  Future<List<FileEntity>> call() {
-    return repository.getScannedFiles();
+  Future<List<FileEntity>> call(String? folderPath) {
+    return repository.getScannedFiles(folderPath);
   }
 }

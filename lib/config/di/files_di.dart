@@ -4,6 +4,7 @@ import '../../features/files/data/repositories/file_repository_impl.dart';
 import '../../features/files/domain/repositories/file_repository.dart';
 import '../../features/files/domain/usecases/get_scanned_files_usecase.dart';
 import '../../features/files/domain/usecases/delete_file_usecase.dart';
+import '../../features/files/domain/usecases/move_file_usecase.dart';
 
 final fileRepositoryProvider = Provider<FileRepository>(
       (ref) => FileRepositoryImpl(),
@@ -15,4 +16,10 @@ final getScannedFilesUseCaseProvider = Provider<GetScannedFilesUseCase>(
 
 final deleteFileUseCaseProvider = Provider<DeleteFileUseCase>(
       (ref) => DeleteFileUseCase(ref.read(fileRepositoryProvider)),
+);
+
+final moveFileUseCaseProvider = Provider<MoveFileUseCase>(
+      (ref) => MoveFileUseCase(
+    ref.read(fileRepositoryProvider),
+  ),
 );

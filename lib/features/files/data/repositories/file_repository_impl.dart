@@ -8,21 +8,25 @@ import '../models/file_entity_model.dart';
 class FileRepositoryImpl implements FileRepository {
 
   @override
-  Future<List<FileEntity>> getScannedFiles() async {
-    final directory = await getApplicationDocumentsDirectory();
-    final scannedDir = Directory('${directory.path}/Scanned_Pdfs');
+  Future<List<FileEntity>> getScannedFiles(String? folderPath) async {
+    final directory = folderPath != null
+        ? Directory(folderPath)
+        : Directory(
+      '${(await getApplicationDocumentsDirectory()).path}/Scanned_Pdfs',
+    );
 
-    if (!await scannedDir.exists()) {
+    if (!await directory.exists()) {
       return [];
     }
 
-    final files = scannedDir.listSync().whereType<File>().toList();
+    final files =
+    directory.listSync().whereType<File>().toList();
 
     return files.map((file) {
       final stat = file.statSync();
 
       return FileEntityModel.fromFile(
-        file.uri.pathSegments.last,
+        file.path.split(Platform.pathSeparator).last,
         file.path,
         stat.size,
         stat.changed,
@@ -37,5 +41,23 @@ class FileRepositoryImpl implements FileRepository {
     if (await file.exists()) {
       await file.delete();
     }
+  }
+
+  @override
+  Future<void> moveFile(
+      String sourcePath,
+      String destinationFolderPath,
+      ) async {
+    final file = File(sourcePath);
+
+    if (!await file.exists()) return;
+
+    final fileName =
+        sourcePath.split(Platform.pathSeparator).last;
+
+    final newPath =
+        '$destinationFolderPath${Platform.pathSeparator}$fileName';
+
+    await file.rename(newPath);
   }
 }

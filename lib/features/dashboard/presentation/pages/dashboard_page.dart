@@ -39,6 +39,14 @@ class DashboardPage extends StatelessWidget {
               onPressed: () => context.go(RouteNames.files),
               child: const Text("View Scanned Files"),
             ),
+
+            const SizedBox(height: 16),
+
+            ElevatedButton(
+              onPressed: () =>
+                  context.go(RouteNames.folders),
+              child: const Text("Manage Folders"),
+            ),
           ],
         ),
       ),
