@@ -2,9 +2,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/entities/file_entity.dart';
 import '../../domain/usecases/get_scanned_files_usecase.dart';
 import '../../domain/usecases/delete_file_usecase.dart';
+import '../../domain/usecases/rename_file_usecase.dart';
+import '../../domain/usecases/move_file_usecase.dart';
 import '../../../../config/di/files_di.dart';
 import 'file_sort_type.dart';
-import '../../domain/usecases/move_file_usecase.dart';
+
+
 
 class FileNotifier extends StateNotifier<AsyncValue<List<FileEntity>>> {
   final GetScannedFilesUseCase getFiles;
@@ -12,6 +15,7 @@ class FileNotifier extends StateNotifier<AsyncValue<List<FileEntity>>> {
   bool _isSelectionMode = false;
   final Set<String> _selectedPaths = {};
   final MoveFileUseCase moveFileUseCase;
+  final RenameFileUseCase renameFileUseCase;
 
   final String? _folderPath;
 
@@ -25,6 +29,7 @@ class FileNotifier extends StateNotifier<AsyncValue<List<FileEntity>>> {
     required this.getFiles,
     required this.deleteFileUseCase,
     required this.moveFileUseCase,
+    required this.renameFileUseCase,
     String? folderPath,
   })  : _folderPath = folderPath,
         super(const AsyncValue.loading()) {
@@ -98,6 +103,11 @@ class FileNotifier extends StateNotifier<AsyncValue<List<FileEntity>>> {
     await loadFiles();
   }
 
+  Future<void> renameFile(String oldPath, String newName) async {
+    await renameFileUseCase(oldPath, newName);
+    await loadFiles();
+  }
+
   void _applyFilters() {
     List<FileEntity> filtered = _allFiles;
 
@@ -141,6 +151,7 @@ final fileProvider = StateNotifierProvider.family<
     getFiles: ref.read(getScannedFilesUseCaseProvider),
     deleteFileUseCase: ref.read(deleteFileUseCaseProvider),
     moveFileUseCase: ref.read(moveFileUseCaseProvider),
+    renameFileUseCase: ref.read(renameFileUseCaseProvider),
     folderPath: folderPath,
   ),
 );

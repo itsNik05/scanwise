@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../providers/file_provider.dart';
-import '../widgets/file_tile.dart';
-import '../../../../config/di/folders_di.dart';
-import '../../../../config/routes/route_names.dart';
-import 'package:go_router/go_router.dart';
 import '../providers/file_sort_type.dart';
-import 'package:share_plus/share_plus.dart';
+import '../widgets/file_tile.dart';
+import '../../../../config/routes/route_names.dart';
+import '../../../../config/di/folders_di.dart';
+import '../../domain/entities/file_entity.dart';
 
 class FilesPage extends ConsumerWidget {
   final String? folderPath;
@@ -72,11 +73,10 @@ class FilesPage extends ConsumerWidget {
           ),
           IconButton(
             icon: const Icon(Icons.drive_file_move),
-            onPressed: () async {
+            onPressed: () {
               _showMoveDialog(context, ref, notifier);
             },
           ),
-
           IconButton(
             icon: const Icon(Icons.delete),
             onPressed: () async {
@@ -85,7 +85,8 @@ class FilesPage extends ConsumerWidget {
                 builder: (_) => AlertDialog(
                   title: const Text("Delete Selected Files"),
                   content: const Text(
-                      "Are you sure you want to delete selected files?"),
+                    "Are you sure you want to delete selected files?",
+                  ),
                   actions: [
                     TextButton(
                       onPressed: () =>
@@ -97,8 +98,7 @@ class FilesPage extends ConsumerWidget {
                           Navigator.pop(context, true),
                       child: const Text(
                         "Delete",
-                        style:
-                        TextStyle(color: Colors.red),
+                        style: TextStyle(color: Colors.red),
                       ),
                     ),
                   ],
@@ -114,12 +114,10 @@ class FilesPage extends ConsumerWidget {
             : [],
       ),
       body: fileState.when(
-        loading: () => const Center(
-          child: CircularProgressIndicator(),
-        ),
-        error: (error, _) => Center(
-          child: Text('Error: $error'),
-        ),
+        loading: () =>
+        const Center(child: CircularProgressIndicator()),
+        error: (error, _) =>
+            Center(child: Text('Error: $error')),
         data: (files) {
           if (files.isEmpty) {
             return const Center(
@@ -141,13 +139,13 @@ class FilesPage extends ConsumerWidget {
                     border: OutlineInputBorder(),
                   ),
                   onChanged: (value) {
-                    ref.read(fileProvider(folderPath).notifier).updateSearch(value);
+                    notifier.updateSearch(value);
                   },
                 ),
               ),
-
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12),
+                padding:
+                const EdgeInsets.symmetric(horizontal: 12),
                 child: DropdownButtonFormField<FileSortType>(
                   value: FileSortType.newest,
                   decoration: const InputDecoration(
@@ -174,24 +172,20 @@ class FilesPage extends ConsumerWidget {
                   ],
                   onChanged: (value) {
                     if (value != null) {
-                      ref.read(fileProvider(folderPath).notifier).updateSort(value);
+                      notifier.updateSort(value);
                     }
                   },
                 ),
               ),
-
               const SizedBox(height: 10),
-
               Expanded(
                 child: RefreshIndicator(
-                  onRefresh: () =>
-                      ref.read(fileProvider(folderPath).notifier).loadFiles(),
+                  onRefresh: () => notifier.loadFiles(),
                   child: ListView.builder(
                     padding: const EdgeInsets.all(16),
                     itemCount: files.length,
                     itemBuilder: (context, index) {
                       final file = files[index];
-
                       final isSelected =
                       notifier.selectedPaths.contains(file.path);
 
@@ -205,44 +199,44 @@ class FilesPage extends ConsumerWidget {
                               : null,
                           child: FileTile(
                             file: file,
-
-                            // ✅ TAP LOGIC
                             onTap: () {
                               if (notifier.isSelectionMode) {
                                 notifier.toggleSelection(file.path);
                               } else {
                                 context.push(
                                   RouteNames.pdfPreview,
-                                  extra: file.path,
+                                  extra: {
+                                    'path': file.path,
+                                    'name': file.name,
+                                  },
                                 );
                               }
                             },
-
-                            // ✅ DELETE LOGIC (ONLY IF NOT IN SELECTION MODE)
-                            onDelete: notifier.isSelectionMode
-                                ? () {
-                              notifier.toggleSelection(file.path);
-                            }
-                                : () async {
-                              final confirm = await showDialog<bool>(
+                            onDelete: () async {
+                              final confirm =
+                              await showDialog<bool>(
                                 context: context,
                                 builder: (_) => AlertDialog(
-                                  title: const Text("Delete File"),
+                                  title:
+                                  const Text("Delete File"),
                                   content: Text(
-                                      "Are you sure you want to delete ${file.name}?"),
+                                      "Delete ${file.name}?"),
                                   actions: [
                                     TextButton(
                                       onPressed: () =>
-                                          Navigator.pop(context, false),
-                                      child: const Text("Cancel"),
+                                          Navigator.pop(
+                                              context, false),
+                                      child:
+                                      const Text("Cancel"),
                                     ),
                                     TextButton(
                                       onPressed: () =>
-                                          Navigator.pop(context, true),
+                                          Navigator.pop(
+                                              context, true),
                                       child: const Text(
                                         "Delete",
-                                        style:
-                                        TextStyle(color: Colors.red),
+                                        style: TextStyle(
+                                            color: Colors.red),
                                       ),
                                     ),
                                   ],
@@ -250,8 +244,13 @@ class FilesPage extends ConsumerWidget {
                               );
 
                               if (confirm == true) {
-                                await notifier.deleteFile(file.path);
+                                await notifier
+                                    .deleteFile(file.path);
                               }
+                            },
+                            onRename: () {
+                              _showRenameDialog(
+                                  context, notifier, file);
                             },
                           ),
                         ),
@@ -266,6 +265,7 @@ class FilesPage extends ConsumerWidget {
       ),
     );
   }
+
   void _showMoveDialog(
       BuildContext context,
       WidgetRef ref,
@@ -285,19 +285,56 @@ class FilesPage extends ConsumerWidget {
             itemCount: folders.length,
             itemBuilder: (_, index) {
               final folder = folders[index];
-
               return ListTile(
                 leading: const Icon(Icons.folder),
                 title: Text(folder.name),
                 onTap: () async {
                   Navigator.pop(context);
-                  await notifier
-                      .moveSelected(folder.path);
+                  await notifier.moveSelected(folder.path);
                 },
               );
             },
           ),
         ),
+      ),
+    );
+  }
+
+  void _showRenameDialog(
+      BuildContext context,
+      FileNotifier notifier,
+      FileEntity file,
+      ) {
+    final controller = TextEditingController(
+      text: file.name.replaceAll('.pdf', ''),
+    );
+
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text('Rename File'),
+        content: TextField(
+          controller: controller,
+          decoration:
+          const InputDecoration(labelText: 'File name'),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () async {
+              final newName = controller.text.trim();
+              if (newName.isNotEmpty) {
+                await notifier.renameFile(
+                    file.path, newName);
+              }
+              Navigator.pop(context);
+            },
+            child: const Text('Rename'),
+          ),
+        ],
       ),
     );
   }

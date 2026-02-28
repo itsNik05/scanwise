@@ -5,12 +5,14 @@ import '../../domain/entities/file_entity.dart';
 class FileTile extends StatelessWidget {
   final FileEntity file;
   final VoidCallback onDelete;
+  final VoidCallback onRename;
   final VoidCallback onTap;
 
   const FileTile({
     super.key,
     required this.file,
     required this.onDelete,
+    required this.onRename,
     required this.onTap,
   });
 
@@ -41,16 +43,32 @@ class FileTile extends StatelessWidget {
         subtitle: Text(
           '${_formatSize(file.size)} • ${file.createdAt}',
         ),
-        trailing: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            IconButton(
-              icon: const Icon(Icons.share),
-              onPressed: _shareFile,
+        trailing: PopupMenuButton<String>(
+          onSelected: (value) {
+            switch (value) {
+              case 'rename':
+                onRename();
+                break;
+              case 'delete':
+                onDelete();
+                break;
+              case 'share':
+                _shareFile();
+                break;
+            }
+          },
+          itemBuilder: (context) => const [
+            PopupMenuItem(
+              value: 'rename',
+              child: Text('Rename'),
             ),
-            IconButton(
-              icon: const Icon(Icons.delete_outline),
-              onPressed: onDelete,
+            PopupMenuItem(
+              value: 'share',
+              child: Text('Share'),
+            ),
+            PopupMenuItem(
+              value: 'delete',
+              child: Text('Delete'),
             ),
           ],
         ),

@@ -60,4 +60,25 @@ class FileRepositoryImpl implements FileRepository {
 
     await file.rename(newPath);
   }
+
+  @override
+  Future<void> renameFile(String oldPath, String newName) async {
+    final file = File(oldPath);
+
+    if (!await file.exists()) return;
+
+    final parentPath = file.parent.path;
+
+    // Keep .pdf extension if user didn't type it
+    if (!newName.toLowerCase().endsWith('.pdf')) {
+      newName = '$newName.pdf';
+    }
+
+    final newPath =
+        '$parentPath${Platform.pathSeparator}$newName';
+
+    await file.rename(newPath);
+  }
+
+
 }
