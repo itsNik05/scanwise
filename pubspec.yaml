@@ -13,6 +13,8 @@ dependencies:
   flutter_riverpod: ^2.5.1
   go_router: ^14.2.0
   path_provider: ^2.1.2
+  pdfx: ^2.6.0
+  share_plus: ^7.2.1
 
 flutter:
   uses-material-design: true

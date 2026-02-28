@@ -8,4 +8,5 @@ class RouteNames {
   static const dashboard = '/';
   static const scan = '/scan';
   static const files = '/files';
+  static const pdfPreview = '/pdf-preview';
 }

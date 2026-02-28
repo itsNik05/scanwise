@@ -9,6 +9,7 @@ import '../../features/dashboard/presentation/pages/dashboard_page.dart';
 import 'route_names.dart';
 import '../../features/scan_pdf/presentation/pages/scan_page.dart';
 import '../../features/files/presentation/pages/files_page.dart';
+import '../../features/files/presentation/pages/pdf_preview_page.dart';
 
 final GoRouter appRouter = GoRouter(
   routes: [
@@ -23,6 +24,13 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: RouteNames.files,
       builder: (context, state) => const FilesPage(),
+    ),
+    GoRoute(
+      path: RouteNames.pdfPreview,
+      builder: (context, state) {
+        final filePath = state.extra as String;
+        return PdfPreviewPage(filePath: filePath);
+      },
     ),
   ],
 );
