@@ -11,9 +11,13 @@ import 'route_names.dart';
 import '../../features/files/presentation/pages/files_page.dart';
 import '../../features/files/presentation/pages/pdf_preview_page.dart';
 import '../../features/folders/presentation/pages/folders_page.dart';
-import '../../features/scan_pdf/presentation/pages/camera_page.dart';
+
+
+import '../../features/scan_pdf/presentation/pages/scan_camera_page.dart';
 import '../../features/scan_pdf/presentation/pages/scan_preview_page.dart';
 import '../../features/scan_pdf/presentation/pages/scan_save_page.dart';
+
+
 
 final GoRouter appRouter = GoRouter(
   routes: [
@@ -50,18 +54,12 @@ final GoRouter appRouter = GoRouter(
 
     GoRoute(
       path: RouteNames.scanCamera,
-      builder: (context, state) => const CameraPage(),
+      builder: (context, state) => const ScanCameraPage(),
     ),
 
     GoRoute(
       path: RouteNames.folders,
       builder: (context, state) => const FoldersPage(),
-    ),
-
-    GoRoute(
-      path: RouteNames.scanPreview,
-      builder: (context, state) =>
-      const ScanPreviewPage(),
     ),
 
     GoRoute(

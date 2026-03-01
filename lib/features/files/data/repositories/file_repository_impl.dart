@@ -81,4 +81,12 @@ class FileRepositoryImpl implements FileRepository {
   }
 
 
+  @override
+  Future<void> addFile(FileEntity file) async {
+    // Not needed because files are read directly from directory
+    // Keeping for interface completeness
+    return;
+  }
+
+
 }
