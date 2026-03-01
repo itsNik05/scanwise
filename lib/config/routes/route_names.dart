@@ -13,4 +13,5 @@ class RouteNames {
   static const scanCamera = '/scan-camera';
   static const scanSave = '/scan-save';
   static const scanReview = '/scan-review';
+  static const compressPdf = '/compress-pdf';
 }

@@ -47,6 +47,15 @@ class DashboardPage extends StatelessWidget {
                   context.go(RouteNames.folders),
               child: const Text("Manage Folders"),
             ),
+
+            const SizedBox(height: 16),
+
+            ElevatedButton(
+              onPressed: () {
+                context.push(RouteNames.compressPdf);
+              },
+                child: const Text("Compress PDF"),
+            ),
           ],
         ),
       ),
