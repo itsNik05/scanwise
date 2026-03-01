@@ -14,9 +14,8 @@ import '../../features/folders/presentation/pages/folders_page.dart';
 
 
 import '../../features/scan_pdf/presentation/pages/scan_camera_page.dart';
-import '../../features/scan_pdf/presentation/pages/scan_preview_page.dart';
 import '../../features/scan_pdf/presentation/pages/scan_save_page.dart';
-
+import '../../features/scan_pdf/presentation/pages/scan_review_page.dart';
 
 
 final GoRouter appRouter = GoRouter(
@@ -65,6 +64,12 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: RouteNames.scanSave,
       builder: (context, state) => const ScanSavePage(),
+    ),
+
+    GoRoute(
+      path: RouteNames.scanReview,
+      builder: (context, state) =>
+      const ScanReviewPage(),
     ),
 
   ],
