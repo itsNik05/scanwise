@@ -56,6 +56,15 @@ class DashboardPage extends StatelessWidget {
               },
                 child: const Text("Compress PDF"),
             ),
+
+            const SizedBox(height: 16),
+
+            ElevatedButton(
+              onPressed: () {
+                context.push(RouteNames.mergePdf);
+              },
+              child: const Text("Merge PDFs"),
+            ),
           ],
         ),
       ),

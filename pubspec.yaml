@@ -23,6 +23,7 @@ dependencies:
   reorderable_grid_view: ^2.2.6
   get_it: ^7.6.0
   pdf: ^3.10.8
+  uuid: ^4.3.3
 
 flutter:
   uses-material-design: true

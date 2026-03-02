@@ -17,6 +17,8 @@ import '../../features/scan_pdf/presentation/pages/scan_camera_page.dart';
 import '../../features/scan_pdf/presentation/pages/scan_save_page.dart';
 import '../../features/scan_pdf/presentation/pages/scan_review_page.dart';
 import '../../features/compress_pdf/presentation/pages/compress_pdf_page.dart';
+import '../../features/merge_pdf/presentation/pages/merge_pdf_page.dart';
+
 
 
 final GoRouter appRouter = GoRouter(
@@ -76,6 +78,11 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: RouteNames.compressPdf,
       builder: (context, state) => const CompressPdfPage(),
+    ),
+
+    GoRoute(
+      path: RouteNames.mergePdf,
+      builder: (context, state) => const MergePdfPage(),
     ),
 
   ],
