@@ -11,11 +11,15 @@ import 'route_names.dart';
 import '../../features/files/presentation/pages/files_page.dart';
 import '../../features/files/presentation/pages/pdf_preview_page.dart';
 import '../../features/folders/presentation/pages/folders_page.dart';
-
-
 import '../../features/scan_pdf/presentation/pages/scan_camera_page.dart';
-import '../../features/scan_pdf/presentation/pages/scan_save_page.dart';
+import '../../features/scan_pdf/presentation/pages/scan_crop_page.dart';
 import '../../features/scan_pdf/presentation/pages/scan_review_page.dart';
+
+
+
+//import '../../features/scan_pdf/presentation/pages/scan_camera_page.dart';
+//import '../../features/scan_pdf/presentation/pages/scan_save_page.dart';
+//import '../../features/scan_pdf/presentation/pages/scan_review_page.dart';
 import '../../features/compress_pdf/presentation/pages/compress_pdf_page.dart';
 import '../../features/merge_pdf/presentation/pages/merge_pdf_page.dart';
 
@@ -54,26 +58,26 @@ final GoRouter appRouter = GoRouter(
       },
     ),
 
-    GoRoute(
+    /*GoRoute(
       path: RouteNames.scanCamera,
       builder: (context, state) => const ScanCameraPage(),
-    ),
+    ),*/
 
     GoRoute(
       path: RouteNames.folders,
       builder: (context, state) => const FoldersPage(),
     ),
 
-    GoRoute(
+    /*GoRoute(
       path: RouteNames.scanSave,
       builder: (context, state) => const ScanSavePage(),
-    ),
+    ),*/
 
-    GoRoute(
+    /*GoRoute(
       path: RouteNames.scanReview,
       builder: (context, state) =>
       const ScanReviewPage(),
-    ),
+    ),*/
 
     GoRoute(
       path: RouteNames.compressPdf,
@@ -84,6 +88,22 @@ final GoRouter appRouter = GoRouter(
       path: RouteNames.mergePdf,
       builder: (context, state) => const MergePdfPage(),
     ),
+
+    GoRoute(
+      path: RouteNames.scan,
+      builder: (_, __) => const ScanCameraPage(),
+      routes: [
+        GoRoute(
+          path: 'crop',
+          builder: (_, __) => const ScanCropPage(),
+        ),
+        GoRoute(
+          path: 'review',
+          builder: (_, __) => const ScanReviewPage(),
+        ),
+      ],
+    ),
+
 
   ],
 );

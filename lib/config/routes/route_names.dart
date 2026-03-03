@@ -6,13 +6,14 @@
 
 class RouteNames {
   static const dashboard = '/';
-  static const scan = '/scan';
+  //static const scan = '/scan';
   static const files = '/files';
   static const pdfPreview = '/pdf-preview';
   static const folders = '/folders';
-  static const scanCamera = '/scan-camera';
-  static const scanSave = '/scan-save';
-  static const scanReview = '/scan-review';
+  //static const scanCamera = '/scan-camera';
+  //static const scanSave = '/scan-save';
+  //static const scanReview = '/scan-review';
   static const compressPdf = '/compress-pdf';
   static const mergePdf = '/merge-pdf';
+  static const scan = '/scan';
 }
